@@ -6,9 +6,12 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import { logout } from './slices/authSlice';
 import RRWebRecorder from './rrWebRecorderReact';
+import LogRocket from 'logrocket';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+LogRocket.init('jw4ga6/ecom-dev');
 
 const App = () => {
   const dispatch = useDispatch();
