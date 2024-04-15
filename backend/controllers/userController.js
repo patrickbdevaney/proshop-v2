@@ -118,7 +118,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 // @route   GET /api/users
 // @access  Private/Admin
 const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({}).select('-password');
   res.json(users);
 });
 
@@ -154,6 +154,7 @@ const getUserById = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 });
+
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private/Admin

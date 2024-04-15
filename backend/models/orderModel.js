@@ -6,6 +6,7 @@ const orderSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: 'User',
+      
     },
     orderItems: [
       {
@@ -34,25 +35,31 @@ const orderSchema = mongoose.Schema(
       id: { type: String },
       status: { type: String },
       update_time: { type: String },
-      email_address: { type: String },
+      email_address: { type: String,   validate: {
+        validator: function(v) {
+          return /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(v);
+        },
+        message: props => `${props.value} is not a valid email address!`
+      }, },
     },
     itemsPrice: {
-      type: Number,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
       default: 0.0,
     },
+    
     taxPrice: {
-      type: Number,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
       default: 0.0,
     },
     shippingPrice: {
-      type: Number,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
       default: 0.0,
     },
     totalPrice: {
-      type: Number,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
       default: 0.0,
     },

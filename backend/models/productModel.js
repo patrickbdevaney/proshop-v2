@@ -48,6 +48,12 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: true,
       default: 0,
+      validate: {
+        validator: function(v) {
+          return v >= 0 && v <= 5;
+        },
+        message: props => `${props.value} is not a valid rating! Must be between 0 and 5.`
+      },
     },
     numReviews: {
       type: Number,
@@ -55,7 +61,7 @@ const productSchema = mongoose.Schema(
       default: 0,
     },
     price: {
-      type: Number,
+      type: mongoose.Schema.Types.Decimal128,
       required: true,
       default: 0,
     },

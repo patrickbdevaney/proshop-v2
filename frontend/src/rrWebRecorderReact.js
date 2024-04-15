@@ -11,7 +11,7 @@ const RRWebRecorder = () => {
       emit(event) {
         events.push(event);
 
-        // Send events to Dropbox every 10 seconds
+        // \Send to drop box each ten seconds
         if (events.length && events.length % 10 === 0) {
           const fileContent = JSON.stringify(events);
 
@@ -23,13 +23,13 @@ const RRWebRecorder = () => {
               console.error(error);
             });
 
-          // Clear events
+          // Clear
           events = [];
         }
       },
     });
 
-    // Stop recording when the user exits the website
+    // Stop recording upon user exit
     window.addEventListener('beforeunload', () => {
       if (stopRecording) {
         stopRecording();
@@ -42,7 +42,7 @@ const RRWebRecorder = () => {
         stopRecording();
       }
     };
-  }, []); // Empty dependency array it runs when the user lands on the website and ends when they leave
+  }, []); // Empty dependency array 
 
   return null; // no front end rendering
 };

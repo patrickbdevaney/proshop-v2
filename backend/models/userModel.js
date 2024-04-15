@@ -11,6 +11,12 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      validate: {
+        validator: function(v) {
+          return /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i.test(v);
+        },
+        message: props => `${props.value} is not a valid email address!`
+      },
     },
     password: {
       type: String,
@@ -45,3 +51,5 @@ userSchema.pre('save', async function (next) {
 const User = mongoose.model('User', userSchema);
 
 export default User;
+
+
