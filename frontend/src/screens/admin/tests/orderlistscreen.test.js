@@ -73,7 +73,7 @@ describe('OrderListScreen', () => {
         paidAt: new Date().toISOString(),
         isDelivered: false,
       },
-      // Add more orders as needed...
+    
     ];
     server.use(
       rest.get('/api/orders', (req, res, ctx) => {
