@@ -1,5 +1,6 @@
+import React, { useState } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaTimes } from 'react-icons/fa';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -8,6 +9,12 @@ import { useGetOrdersQuery } from '../../slices/ordersApiSlice';
 const OrderListScreen = () => {
   const { data: orders, isLoading, error } = useGetOrdersQuery();
 
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Not Delivered
+    </Tooltip>
+  );
+
   return (
     <>
       <h1>Orders</h1>
@@ -15,7 +22,7 @@ const OrderListScreen = () => {
         <Loader />
       ) : error ? (
         <Message variant='danger'>
-          {error?.data?.message || error.error}
+          An error occurred while fetching orders. Please try again.
         </Message>
       ) : (
         <Table striped bordered hover responsive className='table-sm'>
@@ -35,20 +42,32 @@ const OrderListScreen = () => {
               <tr key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user && order.user.name}</td>
-                <td>{order.createdAt.substring(0, 10)}</td>
+                <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td>${order.totalPrice}</td>
                 <td>
                   {order.isPaid ? (
-                    order.paidAt.substring(0, 10)
+                    new Date(order.paidAt).toLocaleDateString()
                   ) : (
-                    <FaTimes style={{ color: 'red' }} />
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={renderTooltip}
+                    >
+                      <FaTimes style={{ color: 'red' }} />
+                    </OverlayTrigger>
                   )}
                 </td>
                 <td>
                   {order.isDelivered ? (
-                    order.deliveredAt.substring(0, 10)
+                    new Date(order.deliveredAt).toLocaleDateString()
                   ) : (
-                    <FaTimes style={{ color: 'red' }} />
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={renderTooltip}
+                    >
+                      <FaTimes style={{ color: 'red' }} />
+                    </OverlayTrigger>
                   )}
                 </td>
                 <td>

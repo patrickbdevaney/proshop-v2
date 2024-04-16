@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 import Message from '../../components/Message';
@@ -30,13 +30,17 @@ const UserEditScreen = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!name || !email) {
+      toast.error('Please fill in all fields');
+      return;
+    }
     try {
       await updateUser({ userId, name, email, isAdmin });
-      toast.success('user updated successfully');
+      toast.success('User updated successfully');
       refetch();
       navigate('/admin/userlist');
     } catch (err) {
-      toast.error(err?.data?.message || err.error);
+      toast.error('An error occurred. Please try again.');
     }
   };
 
@@ -60,7 +64,7 @@ const UserEditScreen = () => {
           <Loader />
         ) : error ? (
           <Message variant='danger'>
-            {error?.data?.message || error.error}
+            An error occurred while fetching user details. Please try again.
           </Message>
         ) : (
           <Form onSubmit={submitHandler}>
@@ -71,6 +75,7 @@ const UserEditScreen = () => {
                 placeholder='Enter name'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                required
               ></Form.Control>
             </Form.Group>
 
@@ -81,6 +86,7 @@ const UserEditScreen = () => {
                 placeholder='Enter email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                required
               ></Form.Control>
             </Form.Group>
 

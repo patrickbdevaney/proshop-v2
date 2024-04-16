@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,7 +43,7 @@ const RegisterScreen = () => {
         dispatch(setCredentials({ ...res }));
         navigate(redirect);
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error('An error occurred. Please try again.');
       }
     }
   };
@@ -59,6 +59,8 @@ const RegisterScreen = () => {
             placeholder='Enter name'
             value={name}
             onChange={(e) => setName(e.target.value)}
+            required
+            aria-label='Name'
           ></Form.Control>
         </Form.Group>
 
@@ -69,6 +71,8 @@ const RegisterScreen = () => {
             placeholder='Enter email'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+            aria-label='Email'
           ></Form.Control>
         </Form.Group>
 
@@ -79,6 +83,8 @@ const RegisterScreen = () => {
             placeholder='Enter password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
+            aria-label='Password'
           ></Form.Control>
         </Form.Group>
         <Form.Group className='my-2' controlId='confirmPassword'>
@@ -88,6 +94,8 @@ const RegisterScreen = () => {
             placeholder='Confirm password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+            aria-label='Confirm Password'
           ></Form.Control>
         </Form.Group>
 

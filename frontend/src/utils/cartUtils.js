@@ -1,34 +1,43 @@
+import Decimal from 'decimal.js';
+
+//we improved decimal precision with the decimal.js library, rather than multiplying and dividing by 100
+
 export const addDecimals = (num) => {
-  return (Math.round(num * 100) / 100).toFixed(2);
+  return new Decimal(num).toFixed(2);
 };
 
-// NOTE: the code below has been changed from the course code to fix an issue
-// with type coercion of strings to numbers.
-// Our addDecimals function expects a number and returns a string, so it is not
-// correct to call it passing a string as the argument.
+const calculateItemsPrice = (cartItems) => {
+  return cartItems.reduce(
+    (acc, item) => acc.plus(new Decimal(item.price).times(item.qty)),
+    new Decimal(0)
+  );
+};
+
+const calculateShippingPrice = (itemsPrice) => {
+  return itemsPrice.greaterThan(100) ? new Decimal(0) : new Decimal(10);
+};
+
+const calculateTaxPrice = (itemsPrice) => {
+  return new Decimal(0.15).times(itemsPrice);
+};
+
+const calculateTotalPrice = (itemsPrice, shippingPrice, taxPrice) => {
+  return itemsPrice.plus(shippingPrice).plus(taxPrice);
+};
 
 export const updateCart = (state) => {
-  // Calculate the items price in whole number (pennies) to avoid issues with
-  // floating point number calculations
-  const itemsPrice = state.cartItems.reduce(
-    (acc, item) => acc + (item.price * 100 * item.qty) / 100,
-    0
-  );
+  const itemsPrice = calculateItemsPrice(state.cartItems);
   state.itemsPrice = addDecimals(itemsPrice);
 
-  // Calculate the shipping price
-  const shippingPrice = itemsPrice > 100 ? 0 : 10;
+  const shippingPrice = calculateShippingPrice(itemsPrice);
   state.shippingPrice = addDecimals(shippingPrice);
 
-  // Calculate the tax price
-  const taxPrice = 0.15 * itemsPrice;
+  const taxPrice = calculateTaxPrice(itemsPrice);
   state.taxPrice = addDecimals(taxPrice);
 
-  const totalPrice = itemsPrice + shippingPrice + taxPrice;
-  // Calculate the total price
+  const totalPrice = calculateTotalPrice(itemsPrice, shippingPrice, taxPrice);
   state.totalPrice = addDecimals(totalPrice);
 
-  // Save the cart to localStorage
   localStorage.setItem('cart', JSON.stringify(state));
 
   return state;

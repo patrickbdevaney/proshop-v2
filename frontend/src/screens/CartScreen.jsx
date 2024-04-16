@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -8,6 +9,8 @@ import {
   Form,
   Button,
   Card,
+  Tooltip,
+  OverlayTrigger,
 } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 import Message from '../components/Message';
@@ -20,8 +23,6 @@ const CartScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  // NOTE: no need for an async function here as we are not awaiting the
-  // resolution of a Promise
   const addToCartHandler = (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
   };
@@ -33,6 +34,12 @@ const CartScreen = () => {
   const checkoutHandler = () => {
     navigate('/login?redirect=/shipping');
   };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Remove from cart
+    </Tooltip>
+  );
 
   return (
     <Row>
@@ -50,6 +57,7 @@ const CartScreen = () => {
                   <Col md={2}>
                     <Image src={item.image} alt={item.name} fluid rounded />
                   </Col>
+                 
                   <Col md={3}>
                     <Link to={`/product/${item._id}`}>{item.name}</Link>
                   </Col>
@@ -70,13 +78,19 @@ const CartScreen = () => {
                     </Form.Control>
                   </Col>
                   <Col md={2}>
-                    <Button
-                      type='button'
-                      variant='light'
-                      onClick={() => removeFromCartHandler(item._id)}
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={renderTooltip}
                     >
-                      <FaTrash />
-                    </Button>
+                      <Button
+                        type='button'
+                        variant='light'
+                        onClick={() => removeFromCartHandler(item._id)}
+                      >
+                        <FaTrash />
+                      </Button>
+                    </OverlayTrigger>
                   </Col>
                 </Row>
               </ListGroup.Item>

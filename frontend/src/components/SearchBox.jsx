@@ -7,16 +7,13 @@ const SearchBox = () => {
   const navigate = useNavigate();
   const { keyword: urlKeyword } = useParams();
 
-  // FIX: uncontrolled input - urlKeyword may be undefined
   const [keyword, setKeyword] = useState(urlKeyword || '');
 
   const submitHandler = (e) => {
     e.preventDefault();
-    if (keyword) {
+    if (keyword.trim()) {
       navigate(`/search/${keyword.trim()}`);
       setKeyword('');
-    } else {
-      navigate('/');
     }
   };
 
@@ -29,8 +26,9 @@ const SearchBox = () => {
         value={keyword}
         placeholder='Search Products...'
         className='mr-sm-2 ml-sm-5'
+        aria-label='Search'
       ></Form.Control>
-      <Button type='submit' variant='outline-success' className='p-2 mx-2'>
+      <Button type='submit' variant='outline-success' className='p-2 mx-2' disabled={!keyword.trim()}>
         Search
       </Button>
     </Form>

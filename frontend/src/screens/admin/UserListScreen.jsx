@@ -1,6 +1,6 @@
 import React from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Tooltip, OverlayTrigger } from 'react-bootstrap';
 import { FaTrash, FaEdit, FaCheck, FaTimes } from 'react-icons/fa';
 import Message from '../../components/Message';
 import Loader from '../../components/Loader';
@@ -21,10 +21,16 @@ const UserListScreen = () => {
         await deleteUser(id);
         refetch();
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        toast.error('An error occurred. Please try again.');
       }
     }
   };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Admin
+    </Tooltip>
+  );
 
   return (
     <>
@@ -33,7 +39,7 @@ const UserListScreen = () => {
         <Loader />
       ) : error ? (
         <Message variant='danger'>
-          {error?.data?.message || error.error}
+          An error occurred while fetching users. Please try again.
         </Message>
       ) : (
         <Table striped bordered hover responsive className='table-sm'>
@@ -56,7 +62,13 @@ const UserListScreen = () => {
                 </td>
                 <td>
                   {user.isAdmin ? (
-                    <FaCheck style={{ color: 'green' }} />
+                    <OverlayTrigger
+                      placement="right"
+                      delay={{ show: 250, hide: 400 }}
+                      overlay={renderTooltip}
+                    >
+                      <FaCheck style={{ color: 'green' }} />
+                    </OverlayTrigger>
                   ) : (
                     <FaTimes style={{ color: 'red' }} />
                   )}
